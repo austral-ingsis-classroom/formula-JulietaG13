@@ -1,0 +1,66 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+'-----------------------------------
+
+interface Function {
++ accept(visitor: FunctionVisitor)
+}
+
+class Number implements Function {
+- value: double
+}
+
+class Variable implements Function {
+- name: String
+}
+
+'-----------------------------------
+
+abstract BinaryOperator implements Function {
+- a: Function
+- b: Function
++ calculate(a: Function, b: Function): Double
++ toString(a: String, b: String): String
++ getA(): Function
++ getB(): Function
+}
+
+class Add extends BinaryOperator
+class Subtract extends BinaryOperator
+class Multiply extends BinaryOperator
+class Divide extends BinaryOperator
+class Power extends BinaryOperator
+
+abstract UnaryOperator implements Function {
+- f: Function
++ calculate(f: Function): Double
++ toString(f: String): String
++ getF(): Function
+}
+
+class SquareRoot extends UnaryOperator
+class Module extends UnaryOperator
+
+'-----------------------------------
+
+interface FunctionVisitor {
++visit(bop: BinaryOperator)
++visit(nop: UnaryOperator)
++visit(number: Number)
++visit(incognita: Variable)
+}
+
+class Printer implements FunctionVisitor {
++ getString(): String
+}
+class VariableCollector implements FunctionVisitor {
++ getVariables(): List<String>
+}
+class Resolver implements FunctionVisitor {
+- variables: Map<String, Double>
++ getResult(): Double
+}
+
+@enduml
